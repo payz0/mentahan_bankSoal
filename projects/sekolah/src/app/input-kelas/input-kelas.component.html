@@ -1,0 +1,107 @@
+<div class="px-3 py-1 bg-gray-100 ">
+  Data Kelas
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid">
+  <label for="">Nama kelas</label>
+  <input type="text" (keyup.enter)="simpan()" [(ngModel)]="kelas.kelas" placeholder="Nama kelas" class="px-2 py-1 border">
+
+</div>
+<div class="px-3 py-3 bg-white shadow-sm">
+  <hr>
+  <div class="my-2 text-sm text-right">
+    <button (click)="simpan()" [ngClass]="kelas._id == undefined ? 'bg-green-800 hover:bg-green-700' : 'bg-red-800 hover:bg-red-700' " class=" rounded shadow-lg px-4 py-1 text-white">
+      <span *ngIf="kelas._id == undefined">Simpan</span>
+      <span *ngIf="kelas._id != undefined">Update</span>
+    </button>
+  </div>
+</div>
+<div class="px-3 py-3 my-1 bg-white shadow-sm text-sm">
+  Daftar Kelas
+  <table class="w-full border table-auto">
+    <thead class="border bg-gray-700 text-white">
+      <tr>
+        <th class="border w-10">No</th>
+        <th class="border cursor-pointer" (click)="urutan(dataKelas,'kelas')">Kelas</th>
+        <th class="border">Siswa</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border hover:bg-gray-100" *ngFor="let kelases of dataKelas; let i = index">
+        <td class="border text-center">{{i+1}}</td>
+        <td class="border text-center">{{kelases.kelas}}</td>
+        <td class="border text-center"><span (click)="loadSiswa(kelases.kelas)" class="bg-cyan-600 cursor-pointer px-3 py-0 text-white rounded">{{kelases.jumlah}} Siswa</span></td>
+        <td class="border text-center w-10 px-3">
+          <svg class="h-4 w-4 text-teal-800 cursor-pointer" (click)="kelas = kelases"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- dialogbox -->
+<div [ngClass]="showSiswa ? 'block':'hidden'" class="fixed top-0 left-0 opacity-90 bg-zinc-900 h-screen w-screen "></div>
+<div [ngClass]="showSiswa ? 'slide-up':'hidden'" class="text-sm absolute inset-x-0 mx-auto top-1/4 bg-white z-50  shadow-lg w-full lg:w-1/2 ">
+  <div class="bg-blue-600 px-2 py-1 relative text-white">
+    Daftar Siswa
+    <div class="absolute top-0 right-2">
+      <span class="cursor-pointer" (click)="showSiswa = false;reset();cari = '';">&times;</span>
+    </div>
+  </div>
+
+  <div class="px-3 py-3">
+    <input type="text" (focus)="dataSiswa = allSiswa" [(ngModel)]="cari" placeholder="Cari siswa" class="border border-gray-400 px-2">
+    <table class="w-full border table-auto">
+      <thead class="border bg-gray-700 text-white">
+        <tr>
+          <th class="border w-10">No</th>
+          <th class="border cursor-pointer" (click)="urutan(dataSiswa,'nama_siswa')">Nama</th>
+          <th  class="border cursor-pointer" (click)="urutan(dataSiswa,'kelas')">Kelas</th>
+          <th class="border">Pilih</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border hover:bg-gray-100" *ngFor="let siswa of dataSiswa | cari:cari:'nama_siswa'; let i = index" >
+          <td class="border text-center">{{i+1}}</td>
+          <td class="border px-2 uppercase">{{siswa.nama_siswa}}</td>
+          <td class="border text-center">{{siswa.kelas}}</td>
+          <td class="border text-center">
+            <input  type="checkbox" (change)="cekboxData($event)" [value]="siswa._id">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="relative">
+      <div class="flex justify-evenly px-2 left-0 bg-gray-100 py-1 border absolute z-30 top-1">
+        <div class="flex">
+
+          <span (click)="prev()" class="bg-gray-100 border px-3 cursor-pointer shadow-sm ml-2">
+            <svg class="h-5 w-5  text-gray-400 hover:text-black"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="11 7 6 12 11 17" />
+              <polyline points="17 7 12 12 17 17" />
+            </svg>
+          </span>
+          <span class="bg-white px-4 border"> {{hal}} </span>
+          <span (click)="next()" class="bg-gray-100 px-3 cursor-pointer border shadow-sm ">
+            <svg class="h-5 w-5 text-gray-400 hover:text-black"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="13 17 18 12 13 7" />
+              <polyline points="6 17 11 12 6 7" />
+            </svg>
+          </span>
+          <span class="ml-1 mr-2"> dari {{sisa}}</span>
+        </div>
+        <select class="basis-1" [(ngModel)]="limitBayangan" (change)="gantiLimit();">
+          <option value="">-data-</option>
+          <option value="5">5</option>
+          <option value="15">15</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+    </div>
+    <hr>
+    <div class="my-2 text-sm text-right">
+        <button (click)="simpanSiswaKelas()" class="bg-green-800 hover:bg-green-700 rounded shadow-lg px-4 py-1 text-white">Masuk kelas {{nama_kelas}}</button>
+    </div>
+  </div>
+</div>
+

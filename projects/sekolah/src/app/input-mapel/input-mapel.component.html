@@ -1,0 +1,48 @@
+<div class="px-3 py-1 bg-gray-100 ">
+  Data Mata Pelajaran
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid">
+  <label for="">Nama Mapel</label>
+  <input type="text" [(ngModel)]="mapel.mapel" placeholder="Mata Pelajaran" class="px-2 py-1 border">
+  <label for="">Tingkat</label>
+  <select  [(ngModel)]="mapel.tingkat" class="px-2 py-1 border">
+    <option value="">- pilih kelas -</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+  </select>
+
+</div>
+<div class="px-3 py-3 bg-white shadow-sm">
+  <hr>
+  <div class="my-2 text-sm text-right">
+    <button (click)="simpan()" class="bg-green-800 hover:bg-green-700 rounded shadow-lg px-4 py-1 text-white">Simpan</button>
+  </div>
+</div>
+<div class="px-3 py-3 my-1 bg-white shadow-sm text-sm">
+  Daftar Mata Pelajaran
+  <table class="w-full border table-auto">
+    <thead class="border bg-gray-700 text-white">
+      <tr>
+        <th class="border w-10">No</th>
+        <th class="border cursor-pointer" (click)="sortMapel('mapel')">Mapel</th>
+        <th  class="border cursor-pointer" (click)="sortMapel('tingkat')">Tingkat</th>
+        <th class="border ">action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border hover:bg-gray-100" *ngFor="let mapels of dataMapel; let i = index" >
+        <td class="border text-center">{{i+1}}</td>
+        <td class="border px-2 uppercase" >{{mapels.mapel}}</td>
+        <td class="border text-center">{{mapels.tingkat}}</td>
+        <td class="border text-center flex  justify-evenly">
+          <svg class="h-4 w-4 text-teal-800 cursor-pointer" (click)="mapel = mapels"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <span>|</span>
+          <span class="cursor-pointer text-rose-700" (click)="deleted(mapels._id)">&times;</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

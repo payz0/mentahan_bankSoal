@@ -1,0 +1,107 @@
+<div class="px-3 py-1 bg-gray-100">
+  Data Guru
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid">
+  <div class="text-right">
+    <label class="bg-sky-800 hover:bg-sky-700 px-2 py-1 text-white rounded shadow-sm cursor-pointer mr-1" (click)="downloadExcel()">Download Format</label>
+    <label for="exc" class="bg-red-800 hover:bg-red-700 px-2 py-1 text-white rounded shadow-sm mr-1 cursor-pointer">Import Excel</label>
+    <input id="exc" type="file" class="hidden" (change)="importExcel($event)">
+  </div>
+  <label for="">Nama Guru</label>
+  <input type="text" [(ngModel)]="guru.nama_guru" placeholder="nama guru" class="px-2 py-1 border">
+  <label for="">Nip</label>
+  <input type="text" [(ngModel)]="guru.nip" placeholder="nama guru" class="px-2 py-1 border">
+  <label for="">Sebagai</label>
+  <select name="" id="" [(ngModel)]="guru.sebagai" class="px-2 py-1 border" (change)="guru.sebagai == 'wali' ? loadKelas():'' ">
+    <option value="">-pilih-</option>
+    <option value="guru">Guru</option>
+    <option value="wali">Wali Kelas</option>
+    <option value="admin">Admin</option>
+  </select>
+  <ng-container *ngIf="guru.sebagai == 'wali'" >
+    <label for="">Wali kelas</label>
+    <select name="" id="" [(ngModel)]="guru.kelas" class="px-2 py-1 border">
+      <option value="">-pilih-</option>
+      <option value="{{kelas.kelas}}" *ngFor="let kelas of dataKelas">{{kelas.kelas}}</option>
+    </select>
+  </ng-container>
+</div>
+<div class="px-3 py-3 bg-white shadow-sm">
+  <hr>
+  <div class="my-2 text-sm text-right">
+
+    <button (click)="simpan()" [ngClass]="guru._id ? 'bg-red-800 hover:bg-red-700' : 'bg-green-800 hover:bg-green-700'" class="  rounded shadow-lg px-4 py-1 text-white">
+      <span *ngIf="guru._id">Update</span>
+      <span *ngIf="!guru._id">Simpan</span>
+    </button>
+  </div>
+</div>
+<div class="px-3 py-3 my-1 bg-white shadow-sm text-sm">
+  Daftar Guru
+  <div class="w-full overflow-auto">
+  <table class="w-full border table-auto">
+    <thead class="border bg-gray-700 text-white">
+      <tr>
+        <th class="border w-10">No</th>
+        <th class="border cursor-pointer" >Nama</th>
+        <th  class="border cursor-pointer" >NIP</th>
+        <th  class="border cursor-pointer" >Sebagai</th>
+        <th  class="border cursor-pointer" >Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border hover:bg-gray-100" *ngFor="let guruL of dataGuru; let i = index" >
+        <td class="border text-center">{{i+1}}</td>
+        <td class="border px-2 uppercase">{{guruL.nama_guru}}</td>
+        <td class="border px-2 text-center">{{guruL.nip}}</td>
+        <td class="border px-2 text-center">{{guruL.sebagai | titlecase}}</td>
+        <td class="border px-2 text-center flex items-center justify-evenly">
+          <span (click)="guru = guruL; guru.sebagai == 'wali' ? loadKelas():''" class="cursor-pointer text-white px-2 shadow-lg hover:bg-green-100 rounded">
+            <svg class="h-4 w-4 text-teal-800 cursor-pointer"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </span>
+          <span class="cursor-pointer text-red-700 text-lg hover:bg-white" (click)="hapus(guruL,i)">
+            <!-- <svg class="h-4 w-4 text-red-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <line x1="10" y1="11" x2="10" y2="17" />
+              <line x1="14" y1="11" x2="14" y2="17" />
+            </svg> -->
+            &times;
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+<table id="excel" class="hidden">
+  <tr>
+    <td>nama_guru</td>
+    <td>nip</td>
+    <td>password</td>
+    <td>sebagai</td>
+    <td>kelas</td>
+  </tr>
+</table>
+ <!-- dialogbox -->
+ <div *ngIf="showBox" (click)="showBox = false" class="fixed top-0 left-0 opacity-90 bg-zinc-900 h-screen w-screen "></div>
+ <div *ngIf="showBox" class="absolute text-sm w-1/2 m-0 m-auto left-0 right-0 top-20   z-40">
+   <div class="px-2 py-1 text-white bg-sky-800">
+     Data import
+     <span class="float-right cursor-pointer" (click)="showBox = false; dataImport = []">&times;</span>
+   </div>
+   <div class="bg-white px-10 py-5">
+     <ul>
+       <li class="bg-gray-50 border-b" *ngFor="let guru of dataImport">{{guru.nama_guru}} <br>
+         <b>Nip. {{guru.nip}}</b>
+       </li>
+     </ul>
+     <div class="pt-5 text-right">
+        <button (click)="showBox = false; dataImport = []" class="bg-cyan-800 mr-1 text-sm px-4 py-1 rounded shadow-sm text-white hover:bg-cyan-700">Batal</button>
+       <button (click)="simpanAll()" class="bg-green-800 text-sm px-4 py-1 rounded shadow-sm text-white hover:bg-green-700">Simpan</button>
+     </div>
+   </div>
+ </div>
+

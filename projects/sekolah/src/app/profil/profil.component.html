@@ -1,0 +1,61 @@
+<div class="px-3 py-1 bg-gray-100">
+  Profil
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm " >
+  <div class="px-3 py-3 border">
+    <table class="w-full leading-9">
+      <tr>
+        <td class="w-20">Nama</td>
+        <td class="w-2">:</td>
+        <td class="text-left">
+          <!-- {{profile.nama_guru}} -->
+          <input class="w-full border-b" type="text" [(ngModel)]="profile.nama_guru">
+        </td>
+      </tr>
+      <tr>
+        <td>NIP</td>
+        <td>:</td>
+        <td>
+          <!-- {{profile.nip}} -->
+          <input class="w-full border-b" type="text" [(ngModel)]="profile.nip">
+        </td>
+      </tr>
+      <tr>
+        <td>Sebagai</td>
+        <td>:</td>
+        <td>
+          {{profile.sebagai | uppercase}} <span *ngIf="profile.sebagai == 'wali'">KELAS  {{profile.kelas}}</span>
+          <!-- <input class="w-full border-b" type="text" [(ngModel)]="profile.nama_guru"> -->
+        </td>
+      </tr>
+      <tr>
+        <td>Password</td>
+        <td>:</td>
+        <td>
+          <!-- {{profile.password}} -->
+          <input class="w-full border-b" type="password" [(ngModel)]="profile.password">
+        </td>
+      </tr>
+    </table>
+    <br>
+    <label class="font-bold">Tugas Mengajar</label>
+    <table class="w-full">
+      <thead class="bg-gray-600 text-white">
+      <tr class="border">
+        <th class="w-6 px-2 py-3">No</th>
+        <th class="border">Mapel</th>
+        <th class="border">Kelas</th>
+      </tr>
+    </thead>
+      <tr class="border" *ngFor="let ngajar of tugas; let i = index">
+        <td class="border text-center">{{i+1}}</td>
+        <td class="border px-3">{{ngajar.mapel}}</td>
+        <td class="border text-center">{{ngajar.kelas}}</td>
+      </tr>
+    </table>
+    <div class="py-10 text-right">
+      <button (click)="update()" class="bg-green-800 hover:bg-green-700 px-5 py-2 rounded text-white shadow-sm">Update</button>
+    </div>
+  </div>
+
+</div>

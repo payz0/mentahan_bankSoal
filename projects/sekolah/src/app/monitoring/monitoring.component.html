@@ -1,0 +1,181 @@
+<div class="px-3 py-1 bg-gray-100 ">
+  Monitoring Ujian
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid">
+  <div class="relative">
+
+    <!-- <ul class=" flex text-2xl space-x-4 py-1 px-2">
+      <li> Token</li>
+      <li *ngFor="let tkn of dataToken">
+        <span *ngIf="tkn.token" >{{tkn.kelas}}
+          <span [ngClass]="tkn.kelas == 7 ? 'bg-red-600': tkn.kelas == 8 ? 'bg-yellow-700':''" class="px-2 py-1 bg-green-800 text-white">{{tkn.token}}</span>
+        </span>
+        <span *ngIf="!tkn.token">tunggu...</span>
+      </li>
+    </ul> -->
+    <div  class="px-3 py-1 bg-blue-400 text-white text-md text-center">Token</div>
+    <div class="flex py-2 md:py-10 justify-evenly text-md md:text-2xl md:space-x-4 mb-10 bg-gray-100 shadow-xl">
+      <ng-container  *ngFor="let tkn of dataToken" >
+        <div class=" flex relative" *ngIf="tkn.kelas == 7"> <span class="rounded-l-full px-2 py-3 md:px-5 md:py-5 bg-gray-400 text-gray-100"> 7 </span>
+          <span [ngClass]="tkn.token == null ? 'tokenLoad ':''" class="rounded-r-full  px-2 py-3 md:px-5 md:py-5 text-white bg-red-700"  >{{tkn.token}} <span *ngIf="tkn.token == null">....</span></span>
+
+        </div>
+
+        <div class=" flex relative" *ngIf="tkn.kelas == 8"> <span class="rounded-l-full  px-2 py-3 md:px-5 md:py-5 bg-gray-400 text-gray-100"> 8 </span>
+          <span [ngClass]="tkn.token == null ? 'tokenLoad':''" class="rounded-r-full   px-2 py-3 md:px-5 md:py-5 text-white bg-yellow-700" >{{tkn.token}} <span  *ngIf="tkn.token == null">....</span></span>
+
+        </div>
+
+        <div class=" flex relative" *ngIf="tkn.kelas == 9"> <span class="rounded-l-full  px-2 py-3 md:px-5 md:py-5 bg-gray-400 text-gray-100"> 9 </span>
+          <span [ngClass]="tkn.token == null ? 'tokenLoad':''" class="rounded-r-full   px-2 py-3 md:px-5 md:py-5 text-white bg-green-800" >{{tkn.token}}  <span *ngIf="tkn.token == null">.....</span></span>
+
+        </div>
+
+      </ng-container>
+    </div>
+    <div  class="px-3 py-1 bg-blue-400 text-white text-md text-center">Status peserta ujian</div>
+    <div  class="flex py-2 md:py-10 flex-wrap justify-evenly text-md md:text-2xl md:space-x-4 mb-4 bg-gray-100 shadow-xl">
+        <div (click)="statusSiswa('Belum login')" class="grid text-center shadow-xl cursor-pointer  py-2 hover:shadow-none hover:bg-gray-200 transition-all duration-300">
+          <span class="text-sm bg-green-800 text-white px-3 py-1"> Belum login </span>
+          <span>{{blogin}}</span>
+        </div>
+        <div (click)="statusSiswa('Standby')" class="grid text-center shadow-xl cursor-pointer  py-2  hover:shadow-none hover:bg-gray-200 transition-all duration-300">
+          <span class="text-sm bg-green-800 text-white px-3 py-1"> Standby </span>
+          <span>{{stby}}</span>
+        </div>
+        <div (click)="statusSiswa('Sedang ujian')" class="grid text-center shadow-xl cursor-pointer  py-2  hover:shadow-none hover:bg-gray-200 transition-all duration-300">
+          <span class="text-sm bg-green-800 text-white px-3 py-1"> Sedang ujian </span>
+          <span>{{inrun}}</span>
+        </div>
+        <div (click)="statusSiswa('Selesai')" class="grid text-center shadow-xl cursor-pointer  py-2  hover:shadow-none hover:bg-gray-200 transition-all duration-300">
+          <span class="text-sm bg-green-800 text-white px-3 py-1"> Selesai </span>
+          <span>{{selesai}}</span>
+        </div>
+    </div>
+  </div>
+  <!-- <div class="text-center" *ngIf="statusSebagai == 'admin'"> -->
+    <!-- <span  *ngIf="statusSebagai == 'admin'" (click)="openTab('siswa')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">Daftar Siswa</span>
+    <span *ngIf="statusSebagai == 'admin'" (click)="openTab('mapel')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">Daftar Mapel</span> -->
+    <!-- <button (click)="resetPeserta()" *ngIf="tabs == 'siswa' "class=" px-3 py-1 text-white rounded shadow-sm hover:bg-red-700 bg-red-800">Reset peserta</button>
+    <button (click)="resetUjian()" class="ml-2  px-3 py-1 text-white rounded shadow-sm hover:bg-sky-700 bg-sky-800">Reset ujian</button>
+  </div> -->
+
+  <div class="mt-4" *ngIf="tabs == 'siswa' || statusSebagai != 'admin'">
+    <div class="px-3 py-1 bg-blue-400 text-white text-md text-center">
+      Daftar Peserta Ujian
+      <span *ngIf="statusSebagai == 'admin'" class="float-right cursor-pointer" (click)="tabs = 'mapel'">&times;</span>
+    </div>
+    <div class="px-3 py-4">
+      Kelas :
+      <select class="px-2 py-1 w-1/4 border" [(ngModel)]="clases" (change)="loadSiswa()">
+        <option value="">-pilih kelas-</option>
+        <option value="{{kelas.kelas}}" *ngFor="let kelas of dataKelas">{{kelas.kelas}}</option>
+      </select>
+    </div>
+    <table class="w-full">
+      <thead class="bg-gray-700 text-white">
+        <tr class="border">
+          <th class="py-4 w-10 px-2 ">No</th>
+          <th class="border">Nama Siswa</th>
+          <th class="border">Status Ujian</th>
+          <th class="border" > Action </th>
+        </tr>
+      </thead>
+      <tr *ngFor="let siswa of dataSiswa; let n = index">
+        <td class="border text-center">{{n+1}}</td>
+        <td class="border px-2" [ngClass]="siswa.go_ujian == 'Sedang ujian' ? 'cursor-pointer':''" (click)="siswa.go_ujian == 'Sedang ujian' ? captureSiswa(siswa._id,siswa.nama_siswa):''">{{siswa.nama_siswa | uppercase}}</td>
+        <td class="border px-2 ">
+          <span class="flex justify-between">{{siswa.go_ujian}}
+          <span class="text-white px-2 rounded-sm h-fit" [ngClass]="siswa.curang ? 'bg-red-600':''"> {{siswa.curang ? siswa.curang : 0}}</span>
+        </span>
+        </td>
+        <td  class="border text-center">
+          <!-- resetSiswa(siswa) -->
+          <span (click)="konfirmReset = true; reSis = siswa" class="px-3 cursor-pointer bg-red-800 text-white rounded hover:bg-red-700 shadow-sm">Reset</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class=" " *ngIf="statusSebagai == 'admin' && tabs == 'mapel'">
+    <div class="px-3 py-1 mt-2 bg-blue-400 text-white text-md text-center">
+      Daftar Mapel Ujian
+    </div>
+    <div class="px-3 py-4">
+      <div class="text-right" >
+        <!-- <span  *ngIf="statusSebagai == 'admin'" (click)="openTab('siswa')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">Daftar Siswa</span>
+        <span *ngIf="statusSebagai == 'admin'" (click)="openTab('mapel')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">Daftar Mapel</span> -->
+        <button (click)="resetPeserta(7)" class=" px-3 py-1 text-white rounded shadow-sm hover:bg-red-700 bg-red-800">Reset Kelas 7</button>
+        <button (click)="resetPeserta(8)" class="ml-2  px-3 py-1 text-white rounded shadow-sm hover:bg-green-700 bg-green-800">Reset Kelas 8 </button>
+        <button (click)="resetPeserta(9)" class="ml-2  px-3 py-1 text-white rounded shadow-sm hover:bg-blue-700 bg-blue-800">Reset Kelas 9</button>
+        <button (click)="resetUjian()" class="ml-2  px-3 py-1 text-white rounded shadow-sm hover:bg-sky-700 bg-sky-800">Reset ujian</button>
+      </div>
+      Kelas :
+      <select class="px-2 py-1 w-1/4 border" [(ngModel)]="kelas" (change)="lihatKelas()">
+        <option value="">-pilih kelas-</option>
+        <option value="7" >7</option>
+        <option value="8" >8</option>
+        <option value="9" >9</option>
+      </select>
+
+    </div>
+    <div >
+    <table class="w-full">
+      <thead class="bg-gray-700 text-white">
+        <tr class="border">
+          <th rowspan="2" class="py-4 w-10 px-2 ">No</th>
+          <th rowspan="2" class="border">Mapel</th>
+          <th colspan="2" class="border">Kelas</th>
+          <th rowspan="2" class="border">Action</th>
+        </tr>
+        <tr>
+          <th  class="border">Status</th>
+          <th class="border">Token</th>
+        </tr>
+      </thead>
+      <tr *ngFor="let ujian of dataUjian; let i = index" class="hover:bg-gray-50">
+        <td class="border text-center">{{i+1}}</td>
+        <td class="border px-2">
+          <b class="text-blue-800">{{ujian.mapel}}</b>
+          <p class="text-green-700 border-b">{{ujian.tgl_ujian | date :'dd-MM-yyyy'}} ,  [<b>{{ujian.jam_ujian}}</b>]</p>
+          <i class="text-gray-600 text-xs">{{ujian.nama_guru}}</i>
+        </td>
+        <td class="border px-2">{{ujian.status}}</td>
+        <td class="border text-center">{{ujian.token}}</td>
+        <td  class="border text-center">
+          <div class="flex justify-evenly items-center">
+            <button [ngClass]="ujian.status == 'Mulai' ? 'bg-gray-400 hover:bg-gray-300' :'bg-green-800 hover:bg-green-700'" class=" rounded text-white px-4 py-1" (click)="startUjian(ujian._id,ujian.lock,ujian.mapel)">
+              <span *ngIf="ujian.status == 'Standby'">Start Now</span>
+              <span *ngIf="ujian.status == 'Mulai'">Stop</span>
+            </button>
+            <svg (click)="closeUjian(ujian._id)" class="h-6 w-6 text-red-500 cursor-pointer"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  </div>
+</div>
+<!-- box konfirmasi delete -->
+<div *ngIf="konfirmReset" class="fixed top-1/3 w-full md:w-1/2 left-0 right-0 m-auto shadow-lg bg-gray-300 z-30">
+  <div class="bg-blue-900 text-xs py-1 px-2 text-white">
+    Reset siswa
+    <span class="float-right cursor-pointer" (click)="konfirmReset = false; reSis = {}">&times;</span>
+  </div>
+  <div class="px-4 py-2 text-center">
+    Anda yakin reset siswa a.n <br> <b>{{reSis.nama_siswa | uppercase}}</b>, <br> karena siswa akan keluar otomatis dari ujian
+    <div class="text-center py-4">
+      <span (click)="resetSiswa(reSis); konfirmReset = false; reSis = {}" class="bg-red-800 text-white rounded shadow-sm px-4 py-1 cursor-pointer hover:bg-red-700" >Ya</span>
+      <span class="ml-1 bg-gray-900 text-white rounded shadow-sm px-4 py-1 cursor-pointer hover:bg-gray-600" (click)="konfirmReset = false; reSis = {}">Tidak</span>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="imgCap" class="fixed top-20 left-0 right-0 w-full md:w-1/2 m-auto" (click)="imgCap = null">
+  <img src="{{imgCap}}" class="w-full" alt="" style="height:400px">
+    <div class=" w-full  bg-red-700 px-4 py-2 text-center text-white">
+    <b class="text-2xl">{{namaCap | uppercase}}</b>
+  </div>
+</div>

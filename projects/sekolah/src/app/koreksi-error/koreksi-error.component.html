@@ -1,0 +1,101 @@
+<div class="px-3 py-1 bg-red-200 text-yellow-900">
+  Cek Error
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid " >
+  <div class="flex justify-between mt-2 bg-gray-400 py-2 px-2">
+    <div>
+      Mata Pelajaran :
+      <select class="bg-gray-300" [(ngModel)]="mapel">
+        <option value="">-Pilih-</option>
+        <option value="{{mapel.mapel}}" *ngFor="let mapel of allMapel">{{mapel.mapel}}</option>
+      </select>
+    </div>
+    <div>
+      Tahun :
+      <input type="number" [(ngModel)]="tahun">
+    </div>
+    <!-- <div>
+      Tingkat :
+      <select class="bg-gray-300" [(ngModel)]="kelas">
+        <option value="">-Pilih-</option>
+        <option value="{{a}}" *ngFor="let a of kelases">{{a}}</option>
+      </select>
+    </div> -->
+    <div>
+      <button class="px-2 bg-green-900 rounded-full hover:bg-green-800 text-white" (click)="tampilkan()">Cek</button>
+    </div>
+  </div>
+  <div class="w-full overflow-auto">
+    <table class="w-full">
+      <thead class="bg-black text-white">
+        <tr>
+          <th class="border" rowspan="2">No</th>
+          <th class="border" rowspan="2">Nama</th>
+          <th class="border" rowspan="2">Kelas</th>
+          <th class="border" colspan="2">Nilai</th>
+          <th class="border" colspan="2">Betul</th>
+          <th class="border" colspan="3">Jumlah soal</th>
+          <th class="border" rowspan="2">Action</th>
+        </tr>
+        <tr>
+          <th  class="border">Asli</th>
+          <th  class="border">Cek</th>
+          <th  class="border">Asli</th>
+          <th  class="border">Cek</th>
+          <th  class="border">Asli</th>
+          <th  class="border">Unik</th>
+          <th  class="border">Seharusnya</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let korek of allJawaban; let i = index" class="hover:bg-gray-200">
+          <td class="border">{{i+1}}</td>
+          <td class="border">{{korek.siswa}}</td>
+          <td class="border text-center">{{korek.kelas}}</td>
+          <td class="border text-center">{{korek.nilai}}</td>
+          <td class="border text-center">{{korek.newNilai}}</td>
+          <td class="border text-center">{{korek.jawaban_betul}}</td>
+          <td class="border text-center">{{korek.korekBetul}}</td>
+
+          <td class="border text-center">{{korek.koreksi_jumlah}}</td>
+          <td class="border text-center">{{korek.revisiJuml}}</td>
+          <td class="border text-center"> {{korek.jumlah_soal}}</td>
+          <td class="border">
+            <button (click)="update(korek)" class="bg-green-600 text-white px-2">Perbaiki</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bg-grey-300 mt-5 w-full h-6 ">
+    <hr>
+  </div>
+  <div class="w-full overflow-auto">
+    <button class="bg-red-800 text-white px-2 py-1" (click)="cekTahunUjian()">Cek tahun</button>
+    <table class="w-full">
+      <thead class="bg-black text-white">
+        <tr>
+          <th class="border">No</th>
+          <th class="border">Nama Ujian</th>
+          <th class="border">Tgl Ujian</th>
+          <th class="border">Tahun</th>
+          <th class="border">Action</th>
+        </tr>
+        </thead>
+        <tr *ngFor="let th of allTahun; let i = index" class="hover:bg-gray-200">
+          <td class="border">{{i+1}}</td>
+          <td class="border">{{th.nama_ujian}}</td>
+          <td class="border">{{th.tgl}}</td>
+          <td class="border">
+            <input type="number" [(ngModel)]="th.tahun" >
+          </td>
+          <td class="border">
+            <button class="bg-green-900 text-white px-3" (click)="updateTahun(th)">
+              Perbaiki tahun
+            </button>
+          </td>
+        </tr>
+    </table>
+
+  </div>

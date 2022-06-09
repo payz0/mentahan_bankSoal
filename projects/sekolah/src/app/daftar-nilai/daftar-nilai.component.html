@@ -1,0 +1,174 @@
+<div class="px-3 py-1 bg-gray-100">
+  Daftar Nilai
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid " >
+  <div class="text-xs grid md:flex">
+    <span [ngClass]="tabs == 'harian' ? 'bg-gray-300':''" (click)="openTab('harian')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">Harian</span>
+    <span  [ngClass]="tabs == 'semesteran' ? 'bg-gray-300':''" (click)="openTab('semesteran')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">PTS dan PAS</span>
+    <span *ngIf="sebagai == 'admin'"  [ngClass]="tabs == 'simulasi' ? 'bg-gray-300':''" (click)="openTab('simulasi')" class="rounded-t-lg hover:bg-white bg-gray-100 shadow-sm text-gray-500 text-sm py-2 hover:border-blue-500 border-b-2 px-3 cursor-pointer">Simulasi</span>
+  </div>
+  <div class="flex justify-between mt-10 bg-gray-400 py-2 px-2">
+    <div>
+      Mata Pelajaran :
+      <select (change)="getKelas($event);nilaiSemester = []; dataNilai =[]" [(ngModel)]="nilai.mapel" class="bg-gray-300">
+        <option value="">-Pilih-</option>
+        <option value="{{mapel.mapel}}&{{mapel.kelas}}" *ngFor="let mapel of dataNgajar">{{mapel.mapel}} [{{mapel.tingkat}}]</option>
+      </select>
+    </div>
+    <div class="text-right">
+      Semester :
+      <span [ngClass]="semester == 'Ganjil' ? 'bg-cyan-500 text-red-400 font-bold':'text-gray-300'" (click)="semester = 'Ganjil';selectNilai()" class="hover:text-red-400  bg-gray-400 text-sm py-1 hover:border-blue-500  px-1 cursor-pointer">Ganjil</span>
+      <span  [ngClass]="semester == 'Genap' ? 'bg-cyan-500 text-red-400 font-bold':'text-gray-300'" (click)="semester = 'Genap';selectNilai()" class="hover:text-red-400  bg-gray-400 text-sm py-1 hover:border-blue-500  px-1 cursor-pointer">Genap</span>
+    </div>
+
+  </div>
+  <div class="flex justify-between mb bg-gray-300 py-2 px-2">
+    <div>
+      Kelas :
+      <select  [(ngModel)]="nilai.kelas" (change)="changeKelas();nilaiSemester = []; dataNilai =[]"  class="bg-gray-200">
+        <option value="">-Pilih-</option>
+        <option value="{{kelas}}" *ngFor="let kelas of dataKelas">{{kelas}}</option>
+      </select>
+    </div>
+    <div class="text-right">
+      Tahun :
+      <select [(ngModel)]="tahun_ajaran" (change)="loadSiswa();nilaiSemester = []; dataNilai =[]"  class="bg-gray-200">
+        <option value="">-Pilih-</option>
+        <option value="{{tahun}}" *ngFor="let tahun of listTahun">{{tahun}}/{{tahun+1}}</option>
+      </select>
+    </div>
+
+  </div>
+  <div class="w-full overflow-auto">
+  <table class="w-full " id="excel">
+    <thead class="bg-gray-400">
+      <tr class="border">
+        <th rowspan="2" class="w-10 px-2 py-2 border">No</th>
+        <th rowspan="2" class="border">Nama</th>
+        <th [colSpan]="dataNilai?.length" class="border">Nilai</th>
+      </tr>
+      <tr>
+        <ng-container *ngFor="let nilai of dataNilai">
+        <th class="border" >
+          <span class="grid">
+            <span *ngIf="!downExcel" class="float-right text-red-800 items-center bg-gray-300 cursor-pointer" (click)="deleted = true; siswas = nilai; singleData = false">&times;</span>
+            <span>
+              {{nilai.nama_ujian}}
+            </span>
+            <span class="text-xs text-white">{{nilai.tgl_ujian}}</span>
+        </span>
+        </th>
+      </ng-container>
+      </tr>
+    </thead>
+    <tr class="border hover:bg-gray-100" *ngFor="let siswa of dataSiswa; let i = index">
+      <td class="border text-center">
+        {{i+1}}
+      </td>
+      <td class="border px-2">{{siswa.nama_siswa | uppercase}} </td>
+      <!-- <ng-container> -->
+      <td class="border text-center "  *ngFor="let nilai of dataNilai">
+        <span class="" *ngFor="let nil of siswa.nilai" [ngClass]="cekNilai(siswa.nilai,nilai.tgl_ujian) && nil.tgl_ujian == nilai.tgl_ujian ? 'flex justify-between border':''">
+          <span *ngIf="nil.tgl_ujian == nilai.tgl_ujian" (click)="riwayat(nil,siswa,i)" class="px-2 cursor-pointer">{{nil.nilai | number: '1.0-0'}}</span>
+          <span class="text-red-800 cursor-pointer" (click)="deleted = true; siswas = nil; singleData = true"
+          *ngIf="cekNilai(siswa.nilai,nilai.tgl_ujian) && nil.tgl_ujian == nilai.tgl_ujian">&times;</span>
+        </span>
+
+      </td>
+      <!-- </ng-container> -->
+    </tr>
+  </table>
+  <!-- <hr> -->
+  <div class="text-right mt-6">
+    <button class="bg-red-800 px-3 py-1 text-white rounded shadow-sm" (click)="downloadExcel()">Download</button>
+  </div>
+</div>
+</div>
+
+<!-- box konfirmasi delete -->
+<div *ngIf="deleted" class="fixed top-1/3 w-1/2 left-0 right-0 m-auto shadow-lg bg-gray-300 z-30">
+  <div class="bg-blue-900 text-xs py-1 px-2 text-white">
+    Delete nilai ujian ?
+    <span class="float-right cursor-pointer" (click)="deleted = false;siswas = {}">&times;</span>
+  </div>
+  <div class="px-4 py-2 text-center">
+    Anda yakin ingin hapus <span *ngIf="!singleData"> semua </span>  nilai  <b *ngIf="!singleData"> ujian {{siswas.nama_ujian}} tertanggal {{siswas.tgl_ujian}}</b> <b *ngIf="singleData">{{siswas.nilai | number: '1.0-0'}}</b> ?
+    <div class="text-center py-4">
+      <span *ngIf="singleData" class="bg-red-800 text-white rounded shadow-sm px-4 py-1 cursor-pointer hover:bg-red-700" (click)="hapusNilai(siswas)">Ya</span>
+      <span *ngIf="!singleData" class="bg-red-800 text-white rounded shadow-sm px-4 py-1 cursor-pointer hover:bg-red-700" (click)="dataJawaban(siswas)">Ya</span>
+      <span class="ml-1 bg-gray-900 text-white rounded shadow-sm px-4 py-1 cursor-pointer hover:bg-gray-600" (click)="deleted = false;siswas = {}">Tidak</span>
+    </div>
+  </div>
+</div>
+<!-- dialogbox -->
+<div *ngIf="showSoal" class="fixed  top-0 left-0 opacity-90 bg-zinc-900 h-screen w-screen "></div>
+<span *ngIf="showSoal" class="fixed z-20 cursor-pointer text-white rounded-sm shadow-md hover:bg-green-700 right-4 top-20 bg-green-800 px-6 py-2" (click)="showSoal = false; siswas = {}; dataSoal = []">Tutup</span>
+<span *ngIf="showSoal && salahKoreksi" class="fixed z-20 cursor-pointer text-white rounded-sm shadow-md hover:bg-red-700 right-4 top-32 bg-red-800 px-6 py-2" (click)="perbaikiNilai()">Koreksi</span>
+<!-- <input *ngIf="showSoal" type="button" value="Download PDF" class="fixed z-20 cursor-pointer text-white rounded-sm shadow-md hover:bg-red-700 right-4 top-32 bg-red-800 px-6 py-2" (click)="SavePDF()"> -->
+<div *ngIf="showSoal" class="absolute  top-20 bg-white shadow-lg px-2 py-2 w-11/12 md:w-8/12  mx-auto left-0 right-0">
+  <div class="px-2 py-1 bg-sky-200">
+    <span>  Lembar jawaban</span>
+    <!-- <span>Juml. Soal = {{siswas.jumlah_soal}}</span> -->
+
+  </div>
+  <!-- <ng-container #content id="content"> -->
+<div #content id="content">
+  <div class=" bg-gray-100 px-2 py-2">
+    <table class="w-full">
+      <tr class="border">
+        <td> Nama </td> <td>:</td> <td class="text-xs md:text-base">{{siswas.nama_siswa}}</td>
+        <td class="md:w-1/2"></td>
+        <td> Nilai</td><td>:</td><td>{{korekNilai | number: '1.0-0'}}</td>
+      </tr>
+      <tr class="border">
+        <td> Mapel </td> <td>:</td> <td class="text-xs md:text-base">{{siswas.mapel}}</td>
+        <td></td>
+        <td>Betul</td><td>:</td><td>{{korekJawaban}} dari {{siswas.jumlah_soal}}</td>
+      </tr>
+      <tr class="border">
+        <td> Ujian </td> <td>:</td> <td> {{siswas.jenis_ujian}}</td>
+        <td></td>
+        <td> Curang</td><td>:</td><td>{{siswas.curang == null ? 0: siswas.curang}}</td>
+      </tr>
+    </table>
+  </div>
+    <ol class="list-decimal ml-5 " >
+      <li *ngFor="let soal of dataSoal" class="relative border-2  bg-white transition-all ease-out duration-200  my-1 px-1 py-2">
+        <div class="border-b bg-gray-50 px-3 py-3" [innerHTML]="soal.soal | sanitizehtml"></div>
+        <span class="absolute right-6 top-14" *ngIf="soal.jawaban == soal.jawaban_siswa">
+          <svg class="h-10 w-10 text-green-500"  viewBox="0 0 24 24"  fill="green"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+          </svg>
+        </span>
+        <span class="absolute right-6 top-14" *ngIf="soal.jawaban != soal.jawaban_siswa">
+          <svg class="h-10 w-10 text-red-500"  viewBox="0 0 24 24"  fill="red" fill-opacity="0.5" stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+             <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+          </svg>
+        </span>
+        <ol style="list-style-type: upper-alpha;" class="ml-6">
+          <li class="px-2 py-1 relative" >
+            <span *ngIf="soal.jawaban_siswa == 'A'" class="absolute left-0 top-1 bg-gray-900 w-6 h-6 rounded-full opacity-50" style="left:-25px"></span>
+
+            <p [innerHTML]="soal.opsiA | sanitizehtml"></p>
+          </li>
+          <li class="px-2 py-1 relative" >
+            <span *ngIf="soal.jawaban_siswa == 'B'" class="absolute left-0 top-1 bg-gray-900 w-6 h-6 rounded-full opacity-50" style="left:-25px"></span>
+            <p [innerHTML]="soal.opsiB | sanitizehtml"></p>
+          </li>
+          <li class="px-2 py-1 relative" >
+            <span *ngIf="soal.jawaban_siswa == 'C'" class="absolute left-0 top-1 bg-gray-900 w-6 h-6 rounded-full opacity-50" style="left:-25px"></span>
+            <p [innerHTML]="soal.opsiC | sanitizehtml"></p>
+          </li>
+          <li class="px-2 py-1 relative" >
+            <span *ngIf="soal.jawaban_siswa == 'D'" class="absolute left-0 top-1 bg-gray-900 w-6 h-6 rounded-full opacity-50" style="left:-25px"></span>
+            <p [innerHTML]="soal.opsiD | sanitizehtml"></p>
+          </li>
+        </ol>
+        <i class="absolute text-green-900 right-0 rounded top-0 bg-gray-100 px-2 py-1 grid"><b> Jawaban benar {{soal.jawaban}} </b>
+          <i class="text-xs">by {{soal.nama_guru}}</i>
+        </i>
+    </li>
+  </ol>
+</div>
+<!-- </ng-container> -->
+</div>

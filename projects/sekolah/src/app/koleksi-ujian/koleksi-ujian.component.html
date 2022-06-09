@@ -1,0 +1,237 @@
+<div class="px-3 py-1 bg-gray-100">
+  Setup Ujian
+</div>
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid" (dblclick)="changeStatus = false">
+  <div class="text-right">
+    <button class="bg-green-800 text-white px-3 py-1 shadow-md rounded" (click)="infoBox = true;loadMapelClass()">Buat Ujian</button>
+  </div>
+  <div class="mt-1">
+    <table class="w-full" >
+      <thead class="bg-gray-300  text-gray-500"  (click)="changeStatus = false">
+        <tr >
+          <!-- <th class="py-2 border">Mapel</th> -->
+          <th class="py-2 border">Nama Ujian</th>
+          <!-- <th class="py-2 border">Koleksi Soal</th>
+          <th class="border">Kelas</th> -->
+          <th class="border">Jenis</th>
+          <th class="border hidden md:block">Tahun Ajaran</th>
+          <!-- <th class="border hidden md:block">Semester</th> -->
+          <th class="border">Status</th>
+          <th class="border">Details</th>
+        </tr>
+      </thead>
+      <tr class="border "  *ngFor="let ujian of dataUjian;let i = index" >
+        <!-- <td class="px-2">{{ujian.mapel}}</td> -->
+        <td class="px-2  flex justify-between flex-wrap align-middle">{{ujian.nama_ujian}}  <b>[{{ujian.mapel}}]</b></td>
+        <!-- <td>
+          <div class="flex items-center px-3 cursor-pointer ">
+            <img src="./assets/image/folder.svg" class="w-8 h-8"> <span class="ml-2">{{ujian.nama_koleksi}}</span>
+          </div>
+        </td>
+        <td class="text-center">{{ujian.kelas}}</td> -->
+        <td class="text-center">{{ujian.jenis}}</td>
+        <td class="text-center hidden md:block">{{ujian.tahun_ajaran}} [ <i>{{ujian.semester}}</i> ]</td>
+        <!-- <td class="text-center hidden md:block">{{ujian.semester}}</td> -->
+        <td class="text-center relative cursor-pointer w-20" (click)="getIndex(i)">
+          <ng-container *ngIf="!ujian.lock || ujian.jenis == 'Harian'">
+            <span (click)="changeStatus = true" class="flex space-x-2 ml-2 text-white hover:bg-gray-400 bg-gray-500 px-2 rounded items-center">
+              <svg *ngIf="ujian.status == 'Mulai'" class="h-4 w-4 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <svg *ngIf="ujian.status == 'Standby'" class="h-4 w-4 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>
+                <path d="M16.2 4a9.03 9.03 0 1 0 3.9 12a6.5 6.5 0 1 1 -3.9 -12" />
+              </svg>
+              <svg *ngIf="ujian.status == 'Off' || ujian.status == 'off'" class="h-4 w-4 text-yellow-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>
+                <circle cx="12" cy="12" r="9" />
+                <line x1="5.7" y1="5.7" x2="18.3" y2="18.3" />
+              </svg>
+              <span >
+                {{ujian.status}}
+              </span>
+            </span>
+            <div class="absolute top-0 z-10" *ngIf="changeStatus && idx == i" >
+              <ul >
+                <li *ngIf="ujian.jenis == 'Harian'" (click)="pilihStatus(i,'Mulai')" class="px-3 py-1 border-b bg-gray-100 hover:bg-gray-50 cursor-pointer flex space-x-3 items-center">
+                  <svg class="h-4 w-4 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Mulai
+                </li>
+                <li *ngIf="ujian.jenis == 'PTS' || ujian.jenis == 'PAS' || ujian.jenis == 'Simulasi'"  (click)="pilihStatus(i,'Standby')" class="px-3 py-1 border-b bg-gray-100 hover:bg-gray-50 cursor-pointer flex space-x-3 items-center" >
+                  <svg class="h-4 w-4 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>
+                    <path d="M16.2 4a9.03 9.03 0 1 0 3.9 12a6.5 6.5 0 1 1 -3.9 -12" />
+                  </svg>
+                  Standby
+                </li>
+                <li (click)="pilihStatus(i,'Off')" class="px-3 py-1 border-b bg-gray-100 hover:bg-gray-50 cursor-pointer  flex space-x-3 items-center">
+                  <svg class="h-4 w-4 text-yellow-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="5.7" y1="5.7" x2="18.3" y2="18.3" />
+                  </svg>
+                  Off
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="ujian.lock && ujian.jenis != 'Harian' ">
+            Sedang ujian
+          </ng-container>
+        </td>
+        <td class="text-center">
+          <ng-container *ngIf="!ujian.lock || ujian.jenis =='Harian'">
+            <span (click)="showDetail = true; infoBox = true; ujianDetail = ujian" class="bg-green-700 px-2 rounded hover:bg-green-600 text-white cursor-pointer">Details</span>
+          </ng-container>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- dialogbox -->
+
+<div *ngIf="infoBox" class="fixed top-0 left-0 opacity-90 bg-zinc-900 h-screen w-screen "></div>
+<!-- <div class="absolute top-6 h-5/6 overflow-auto" > -->
+  <div *ngIf="infoBox" class="text-sm slide-up absolute inset-x-0 mx-auto top-px bg-white z-50  shadow-lg w-full lg:w-1/2 ">
+    <div class="bg-blue-600 px-2 py-1 relative text-white">
+      <span *ngIf="!showDetail">Buat Ujian</span>
+      <span *ngIf="showDetail"> Rincian {{ujianDetail.nama_ujian}}</span>
+      <div class="absolute top-0 right-2">
+        <span class="cursor-pointer" (click)="infoBox = false;showDetail = false; ujian = {}">&times;</span>
+      </div>
+    </div>
+
+    <div class="px-3 py-3 " *ngIf="!showDetail" >
+      <label for="">Nama Ujian</label>
+      <input type="text" [(ngModel)]="ujian.nama_ujian"  placeholder="Nama koleksi soal" class="border border-gray-400 px-2 py-2 w-full">
+      <label for="">Mata Pelajaran</label>
+      <select name="" id="" class="my-1 px-2 py-2 border border-gray-400 w-full" [(ngModel)]="ujian.mapel">
+        <option value="">- pilih Mapel -</option>
+        <option value="{{mapel.mapel}}" *ngFor="let mapel of dataMapel">{{mapel.mapel}}</option>
+      </select>
+      <label for="">Jenis Ujian</label>
+      <select  class="my-1 px-2 py-2 border border-gray-400 w-full" [(ngModel)]="ujian.jenis">
+        <option value="">- pilih -</option>
+        <option value="Harian">Harian</option>
+        <option value="PTS">PTS</option>
+        <option value="PAS">PAS</option>
+        <option value="Simulasi">Simulasi</option>
+      </select>
+      <label for="">Pilih Folder Soal</label>
+      <select  class="my-1 px-2 py-2 border border-gray-400 w-full" [(ngModel)]="ujian.koleksiSoal" >
+        <option value="">- pilih -</option>
+        <option value="{{koleksi._id}}|{{koleksi.nama_koleksi}}" *ngFor="let koleksi of dataKoleksi">{{koleksi.nama_koleksi}}</option>
+      </select>
+      <label for="">Semester</label>
+      <select  class="my-1 px-2 py-2 border border-gray-400 w-full" [(ngModel)]="ujian.semester">
+        <option value="">- pilih -</option>
+        <option value="Ganjil">Ganjil</option>
+        <option value="Genap">Genap</option>
+      </select>
+      <label for="">Durasi</label>
+      <input type="number" min="2" oninput="this.value = Math.abs(this.value)" placeholder="Durasi dalam satuan menit" [(ngModel)]="ujian.durasi" class="border border-gray-400 px-2 py-2 mb-2 w-full">
+      <label for="" >Pelaksanaan</label>
+      <div class="grid grid-cols-3">
+        <div class="grid">
+          <label for="">Tanggal</label>
+          <input type="date" (change)="tglUjian($event)"  class="border border-gray-400 px-2 py-2 ">
+        </div>
+        <div class="grid">
+          <label for="">Jam</label>
+          <input type="time" [(ngModel)]="ujian.jam_ujian" class="border border-gray-400 px-2 py-2 ">
+        </div>
+        <div class="grid">
+          <label for="">Tahun Ajaran</label>
+          <select [(ngModel)]="ujian.tahun_ajaran" class=" px-2 py-2 border border-gray-400 ">
+            <option *ngFor="let th of tahun" value="{{th}}">{{th}}/{{th+1}}</option>
+          </select>
+        </div>
+      </div>
+
+      <br>
+      <label for="">Pilih kelas : </label>
+      {{ujian.kelas}}
+      <div class="text-center ">
+        <ul class="flex flex-wrap justify-evenly space-x-3 space-y-3">
+          <ng-container *ngIf="ujian.jenis == 'Harian'">
+            <li  (click)="pilihKelas(kelas.kelas)" class="ml-3 mt-3 px-1 py-1 border cursor-pointer hover:bg-gray-200 transition-all ease-out duration-100" *ngFor="let kelas of dataKelas">{{kelas.kelas}}</li>
+          </ng-container>
+          <ng-container *ngIf="ujian.jenis != 'Harian'">
+            <li (click)="pilihSemua('7')" class="ml-3 mt-3 px-1 py-1 border cursor-pointer hover:bg-gray-200 transition-all ease-out duration-100">Kelas 7 semua</li>
+            <li (click)="pilihSemua('8')" class="ml-3 mt-3 px-1 py-1 border cursor-pointer hover:bg-gray-200 transition-all ease-out duration-100">Kelas 8 semua</li>
+            <li (click)="pilihSemua('9')" class="ml-3 mt-3 px-1 py-1 border cursor-pointer hover:bg-gray-200 transition-all ease-out duration-100">Kelas 9 semua</li>
+          </ng-container>
+        </ul>
+      </div>
+      <hr>
+      <div class="my-2 text-sm text-right">
+        <button  class="bg-gray-800 hover:bg-gray-700 rounded shadow-lg px-4 py-1 text-white mr-1" (click)="ujian = {}; infoBox = false">Batal</button>
+        <button  class="bg-green-800 hover:bg-green-700 rounded shadow-lg px-4 py-1 text-white" (click)="simpan()">Simpan</button>
+      </div>
+    </div>
+    <!-- detail -->
+    <div *ngIf="showDetail"  class="px-3 py-3" >
+      <table class="w-full">
+        <tr class="hover:bg-gray-100">
+          <td>Mata Pelajaran</td><td>:</td>
+          <td>{{ujianDetail.mapel}}</td>
+        </tr>
+        <tr  class="hover:bg-gray-100">
+          <td>Jenis Ujian</td><td>:</td>
+          <td>{{ujianDetail.jenis}}</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td>Semester</td><td>:</td>
+          <td>{{ujianDetail.semester}}</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td>Koleksi soal</td><td>:</td>
+          <td>{{ujianDetail.nama_koleksi}}</td>
+          <td>
+            <svg (click)="preview(ujianDetail.id_koleksi_soal)" class="h-5 w-5 text-green-800 cursor-pointer"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z"/>
+              <circle cx="12" cy="12" r="2" />
+              <path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" />
+              <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" />
+            </svg>
+          </td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td>Tanggal Ujian</td><td>:</td>
+          <td>{{ujianDetail.tgl_ujian | date :'dd/MM/yyyy'}} pada jam {{ujianDetail.jam_ujian}} dengan durasi {{ujianDetail.durasi}} menit</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td>Tahun Ajaran</td><td>:</td>
+          <td>{{ujianDetail.tahun_ajaran}}</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td>Kelas</td><td>:</td>
+          <td>{{ujianDetail.kelas}}</td>
+        </tr>
+        <tr class="hover:bg-gray-100">
+          <td>Status</td><td>:</td>
+          <td>{{ujianDetail.status}}</td>
+        </tr>
+        <tr>
+          <td>Token</td> <td>:</td>
+          <td>
+            <span class="px-3 bg-gray-700 text-white">
+              {{ujianDetail.token}}
+            </span>
+          </td>
+        </tr>
+      </table>
+      <div class="text-right">
+        <hr>
+        <br>
+        <ng-container *ngIf="ujianDetail.status == 'Off' || ujianDetail.status == 'Standby'">
+          <button *ngIf="ujianDetail.jenis == 'Harian'" (click)="rubahStatus('Mulai')" class="bg-green-800 text-white hover:bg-green-700 mr-1 px-3 rounded py-1">Mulai Ujian</button>
+          <button (click)="showDetail = false; ujian = ujianDetail;loadMapelClass()" class="bg-gray-600 text-white hover:bg-gray-500 mr-1 px-3 rounded py-1">Edit</button>
+          <button (click)="hapus()" class="bg-red-600 text-white hover:bg-red-500 px-3 rounded py-1">Hapus</button>
+        </ng-container>
+        <ng-container *ngIf="ujianDetail.status != 'Off'">
+          <button *ngIf="ujianDetail.jenis == 'Harian'" (click)="rubahStatus('Off')" class="bg-green-800 text-white hover:bg-green-700 mr-1 px-3 rounded py-1">Stop Ujian</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+<!-- </div> -->

@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  height: 100%;
+  position: relative;
+}
+
+p {
+  font-family: Lato;
+}
+
+.wrapper {
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid black;
+}
+
+.super-duper-keyboard {
+  background: black;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

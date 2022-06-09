@@ -1,0 +1,98 @@
+<div class="px-3 py-1 bg-gray-100">
+  Daftar naskah soal
+</div>
+  <div class="px-3 py-3 text-sm bg-white shadow-sm grid " >
+    <div class="text-right h-7">
+      <button *ngIf="!showSide" class="bg-green-800 text-white px-3 py-1 shadow-md rounded" (click)="infoBox = true;">Tambah naskah</button>
+    </div>
+    <div class="mt-1 w-full overflow-auto">
+      <table class="w-full">
+        <thead class="bg-gray-300  text-gray-500">
+          <tr >
+            <th class="py-2 border">Naskah Soal</th>
+            <th class="border">Jumlah Soal</th>
+            <th class="border">Date created</th>
+            <th class="border">Preview</th>
+          </tr>
+        </thead>
+        <ng-container  *ngFor="let koleksi of arrayCollect; let i = index" >
+          <tr class="hover:bg-gray-100 border"*ngIf="!showSide || indexs == i">
+            <td class="border" (dblclick)="editFolder(i)">
+              <div class="flex justify-between items-center px-3 cursor-pointer ">
+                <div class="flex items-center">
+                  <img src="./assets/image/mword.svg" class="w-6 h-8">
+                  <span *ngIf="!editNama || indx != i" class="ml-2">{{koleksi.nama_koleksi}}</span>
+                  <input (keyup.enter)="editNama = false; enter(koleksi)" *ngIf="editNama && indx == i" type="text" [(ngModel)]="koleksi.nama_koleksi" class="border-b ml-2">
+                </div>
+                <svg *ngIf="editNama && indx == i" (click)="enter(koleksi); editNama = false" class="h-6 w-6 text-green-800"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                <span *ngIf="!editNama || indx != i" (click)="deleteFolder(koleksi._id)">&times;</span>
+              </div>
+
+            </td>
+            <td class="flex py-2 justify-between border aligns-middle text-center">
+              <span></span>
+              {{!showSide ? koleksi.daftar_soal ? koleksi.daftar_soal.split(',').length : 0 : selectSoal.length}}
+              <span class="flex items-center">
+                <span class="px-1 text-white shadow-sm cursor-pointer  bg-green-800 rounded text-md" [ngClass]="showSide ? 'bg-sky-400':''" (click)="showSoal(i,koleksi)">
+                  <span *ngIf="!showSide">+</span>
+                  <span *ngIf="showSide">
+                    <svg class="h-4 w-4 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                      <polyline points="17 21 17 13 7 13 7 21" />
+                      <polyline points="7 3 7 8 15 8" />
+                    </svg>
+
+                  </span>
+                </span>
+                <svg (click)="showSide = false; selectSoal = {}" *ngIf="showSide" class="h-4 w-4 text-red-500 cursor-pointer"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />  <line x1="15" y1="9" x2="9" y2="15" />
+                  <line x1="9" y1="9" x2="15" y2="15" />
+                </svg>
+              </span>
+            </td>
+            <td class="text-center border">{{koleksi.tgl | date : 'dd/MM/yyyy , hh:mm'}}</td>
+            <td class="w-2 border">
+              <div class="px-4" (click)="preview(koleksi._id)">
+                <svg class="h-6 w-6 cursor-pointer hover:text-green-500 text-green-800"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="2" />
+                  <path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" />
+                  <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" />
+                </svg>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+  </div>
+
+<div   class="bg-white px-3 py-3 " *ngIf="showSide">
+  <div class="border px-2 py-2 "  >
+    <app-daftar-soal  [selectSoal]="selectSoal"></app-daftar-soal>
+  </div>
+</div>
+
+<div *ngIf="infoBox" class="fixed top-0 left-0 opacity-90 bg-zinc-900 h-screen w-screen "></div>
+<div *ngIf="infoBox" class="text-sm slide-up fixed inset-x-0 mx-auto top-1/4 bg-white z-50  shadow-lg w-full lg:w-1/2 ">
+  <div class="bg-blue-600 px-2 py-1 relative text-white">
+    Buat koleksi soal
+    <div class="absolute top-0 right-2">
+      <span class="cursor-pointer" (click)="infoBox = false">&times;</span>
+    </div>
+  </div>
+
+  <div class="px-3 py-3">
+    <input type="text" [(ngModel)]="folder.nama_koleksi"  placeholder="Nama koleksi soal" class="border border-gray-400 px-2 py-2 w-full">
+    <!-- <select name="" id="" class="my-1 px-2 py-2 border border-gray-400 w-full" [(ngModel)]="folder.mapel">
+      <option value="">- pilih Mapel -</option>
+      <option value="{{mapel.mapel}}" *ngFor="let mapel of dataMapel">{{mapel.mapel}} [ {{mapel.kelas.split(',')[0].split('')[0]}} ]</option>
+    </select> -->
+    <hr>
+    <div class="my-2 text-sm text-right">
+        <button  class="bg-green-800 hover:bg-green-700 rounded shadow-lg px-4 py-1 text-white" (click)="simpan()">Simpan</button>
+    </div>
+  </div>
+</div>

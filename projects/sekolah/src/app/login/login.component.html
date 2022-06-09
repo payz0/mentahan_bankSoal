@@ -1,0 +1,44 @@
+<header class="fixed z-50 w-full flex justify-between px-4 py-4 shadow-lg border-b-2 border-gray-600 bg-gradient-to-r from-cyan-500 to-blue-500">
+  <h1 class="text-white text-xl font-semibold">SMP Negeri 1 Arut Selatan</h1>
+  <ul class="flex text-white space-x-6">
+    <li>
+      <a class="hover:text-blue-300" routerLink="">Home</a>
+      <!-- Home -->
+    </li>
+    <li>
+      <a class="hover:text-blue-300" routerLink="/ujian">Ujian</a>
+      <!-- Ujian -->
+    </li>
+    <li>
+      <a class="hover:text-blue-300" routerLink="/login">Login</a>
+      <!-- Login -->
+    </li>
+  </ul>
+</header>
+<div class="bg-gray-200 h-screen w-screen">
+  <div class="bg-no-repeat bg-center bg-cover pt-5 h-72 bg-gradient-to-r from-green-400 to-blue-500 relative" style="background-image: url(./assets/image/backLog.jpg)">
+    <div class="flex md:px-20 items-center pt-16  md:w-1/2 m-0 m-auto">
+      <img class="w-24" src="./assets/image/logo.png" alt="">
+      <div class="grid text-center">
+        <b class="text-white md:text-4xl text-2xl">SMP Negeri 1 Arut Selatan</b>
+        <span class="text-white text-xl">Login dewan guru dan staf</span>
+      </div>
+    </div>
+    <div>
+      <div class="px-12 mt-20 pb-20 py-12 md:w-1/3 w-full left-0 right-0 top-36 rounded shadow-lg absolute m-0 m-auto bg-white">
+        <b class="text-gray-500">Selamat Datang</b>
+        <p class="mb-6">Silahkan login dengan username dan password serta login sebagai apa</p>
+        <input type="text" [(ngModel)]="dataLogin.nip"  placeholder="Masukkan username" class="border-b-2 px-2 py-2 mt-2 border-gray-300 w-full">
+        <input type="password" [(ngModel)]="dataLogin.password"  placeholder="Masukkan password" class="border-b-2 px-2 py-2 mt-2 border-gray-300 w-full">
+        <select [(ngModel)]="dataLogin.sebagai" class="w-full px-2 py-2 border-b-2 border-gray-300 mt-2 text-gray-600">
+          <option value="">- Login sebagai -</option>
+          <option value="guru">Guru</option>
+          <option value="wali">Wali kelas</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button (click)="login()" class="w-full bg-blue-700 shadow-lg hover:bg-blue-600 px-2 py-2 rounded-lg text-white font-bold mt-4">Login</button>
+      </div>
+    </div>
+</div>
+
+</div>

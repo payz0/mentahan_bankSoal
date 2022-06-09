@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~katex/dist/katex.css';
+
+.slide{
+  display: block !important;
+  animation: slider 300ms forwards;
+}
+
+.slide-up{
+  display: block !important;
+  animation: slider-up 300ms forwards;
+}
+
+@keyframes slider {
+  0%{ right: -100px}
+  100%{right: 12px}
+}
+
+@keyframes slider-up {
+  0%{ top: -100px}
+  100%{top: 100px}
+}

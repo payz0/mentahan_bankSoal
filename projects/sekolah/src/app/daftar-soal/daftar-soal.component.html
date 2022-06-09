@@ -1,0 +1,110 @@
+<!-- <div class="px-3 py-1 bg-gray-100 shadow-sm">
+  Daftar Soal
+</div> -->
+<div class="bg-white md:h-11 text-sm px-3 py-1 h-16">
+  <div class="bg-gray-200 px-2 py-2">
+    <div class="flex justify-between">
+      <div>
+        <label for="" class="mr-2">Mapel :</label>
+        <select [(ngModel)]="soal.mapel" class="mr-2" (change)="loadSoal();cari=''">
+          <option value="">- pilih mapel -</option>
+          <option value="{{mapel.mapel}}" *ngFor="let mapel of dataMapel">{{mapel.mapel}}</option>
+        </select>
+      </div>
+      <div>
+        <label for="" class="mr-2 ">Kelas : </label>
+        <select  [(ngModel)]="soal.tingkat" (change)="loadSoal();cari=''">
+          <option value="">-pilih tingkat-</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="px-3 bg-white">
+    <input type="text" (focus)="cariSemuaSoal()" placeholder="Cari soal" [(ngModel)]="cari" class="w-full px-2 py-1 border mb-1">
+  </div>
+
+
+<div class="px-3 py-3 text-sm pb-11 bg-white shadow-sm grid overflow-auto h-96" style="height:580px">
+  <ol class="list-decimal ml-5 ">
+    <li *ngFor="let soal of dataSoal | cari : cari : 'soal'; let i = index" class="relative border-2 hover:bg-indigo-50 bg-white transition-all ease-out duration-200  my-1 px-1 py-2">
+      <div class="border-b bg-gray-50 px-3 py-3" [innerHTML]="soal.soal | sanitizehtml"></div>
+
+      <ol style="list-style-type: upper-alpha;" class="ml-6">
+        <li class="px-2 py-1 " [innerHTML]="soal.opsiA | sanitizehtml">
+        </li>
+        <li class="px-2 py-1 " [innerHTML]="soal.opsiB | sanitizehtml">
+        </li>
+        <li class="px-2 py-1 " [innerHTML]="soal.opsiC | sanitizehtml">
+        </li>
+        <li class="px-2 py-1 " [innerHTML]="soal.opsiD | sanitizehtml">
+        </li>
+      </ol>
+      <i class="absolute text-green-900 right-0 rounded top-0 bg-gray-100 px-2 py-1 grid"><b> Jawaban benar {{soal.jawaban}} </b>
+        <i class="text-xs">by {{soal.nama_guru}}</i>
+      </i>
+      <span class="absolute text-green-900 right-0 rounded bottom-0 px-2 py-1">
+        <b>
+          <div class="px-1 py-1 bg-indigo-100 hover:bg-white shadow-sm cursor-pointer">
+            <svg (click)="editan(soal)" class="h-6 w-6  bg-text-green-800 hover:bg-text-green-700" width="24"  height="24"  viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </div>
+          <!-- <div class="px-1 py-1 mt-1 bg-indigo-100 hover:bg-white shadow-sm cursor-pointer">
+          <svg  class="h-5 w-5 text-red-800 hover:text-red-700 "  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </div> -->
+        <div class="px-1 py-1 mt-1 bg-indigo-100 hover:bg-white shadow-sm cursor-pointer" (click)="pilihSoal(soal._id+'&'+soal.jawaban)" *ngIf="selectSoal.indexOf(soal._id+'&'+soal.jawaban) == -1">
+          <svg class="h-6 w-6 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+             <path stroke="none" d="M0 0h24v24H0z"/>
+             <rect x="4" y="4" width="16" height="16" rx="2" />
+            </svg>
+        </div>
+        <div class="px-1 py-1 mt-1 bg-indigo-100 hover:bg-white shadow-sm cursor-pointer" (click)="pilihSoal(soal._id+'&'+soal.jawaban)" *ngIf="selectSoal.indexOf(soal._id+'&'+soal.jawaban) != -1">
+          <svg class="h-6 w-6 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>
+            <polyline points="9 11 12 14 20 6" />
+            <path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+          </svg>
+        </div>
+        </b>
+      </span>
+    </li>
+  </ol>
+</div>
+
+
+<div class="fixed bottom-0 right-0 w-96">
+  <div class="relative bg-white w-full py-1" >
+    <div class="flex left-0 justify-evenly px-2 w-full bg-gray-100 py-1 border absolute z-30 bottom-0">
+      <div class="flex">
+        <span>Hal : </span>
+        <span (click)="prev()" class="bg-gray-100 border px-3 cursor-pointer shadow-sm ml-2">
+          <svg class="h-5 w-5  text-gray-400 hover:text-black"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="11 7 6 12 11 17" />
+            <polyline points="17 7 12 12 17 17" />
+          </svg>
+        </span>
+        <span class="bg-white px-4 border"> {{hal}} </span>
+        <span (click)="next()" class="bg-gray-100 px-3 cursor-pointer border shadow-sm ">
+          <svg class="h-5 w-5 text-gray-400 hover:text-black"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="13 17 18 12 13 7" />
+            <polyline points="6 17 11 12 6 7" />
+          </svg>
+        </span>
+        <span class="ml-1"> dari {{sisa}}</span>
+      </div>
+      <select class="basis-1" [(ngModel)]="limit" (change)="loadSoal(); hal = 1; skip = 0">
+        <option value="">-data-</option>
+        <option value="5">5</option>
+        <option value="15">15</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+  </div>
+</div>
+

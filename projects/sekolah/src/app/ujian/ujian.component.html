@@ -1,0 +1,97 @@
+
+<div class="bg-white shadow-lg">
+
+  <div class="relative py-3 px-3 border-b">
+    <div class="bg-green-200 absolute py-6 px-3 top-0 left-0"  [ngStyle]="{'width':persentaseLoading+'%'}">
+
+    </div>
+    <div class="relative top-0 left-0">
+    <div class="md:flex flex justify-between md:justify-between">
+      <div >
+        Soal No <span>{{ind+1}}</span>
+      </div>
+      <span class="mx-auto" [ngClass]="persentaseLoading < 99 ? 'text-red-700':'text-green-700'" *ngIf="showPersen"><b> {{persentaseLoading}} %</b></span>
+      <span  *ngIf="!showPersen">{{versi}}</span>
+      <!-- <div class="flex space-x-1 items-center"> -->
+        <div>
+          <span (click)="info = !info" class="rounded hover:bg-green-700 bg-green-800 text-white transition ease-in-out delay-150 py-1 px-2 shadow-lg cursor-pointer">Cek Soal</span>
+
+        </div>
+        <!-- <div>
+          <button class="bg-white shadow-md px-1 py-1 rounded-full" (click)="reload()">
+            <svg class="h-5 w-5 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="1 4 1 10 7 10" />  <polyline points="23 20 23 14 17 14" />  <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" /></svg>
+          </button>
+        </div> -->
+      <!-- </div> -->
+    </div>
+  </div>
+  </div>
+  <div [ngClass]="info ? 'slide':''" class="hidden border ml-3 shadow-lg sm:w-3/4  md:w-1/4 bg-slate-300 fixed z-20">
+    <ul class="flex flex-wrap space-y-0.5 space-x-0.5  px-2 py-2 text-center ">
+      <li (click)="pilihNoSoal(sol,i)" [ngClass]="ind == i ? 'bg-gray-300': dataSoal[i].pilihan ? 'bg-red-400':'' " class="border ml-0.5 my-0.5 mb-0 w-8 border-black hover:bg-gray-300 hover:border-0 bg-white cursor-pointer transition ease-in-out delay-50" *ngFor="let sol of dataSoal; let i = index">{{i+1}}</li>
+      <li>
+        <button class="bg-white shadow-md px-1 py-1 rounded-full" (click)="reload()">
+          <svg class="h-5 w-5 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="1 4 1 10 7 10" />  <polyline points="23 20 23 14 17 14" />  <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" /></svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+  <div class="w-full text-center" *ngIf="!kameraMati">
+    <webcam style="margin: 0 auto;
+    top: -55px;
+    width: 50px;
+    height: 125px;
+    border-radius: 50%;
+    left: -10%;" (initError)="handleInitError($event)" [width]="400" [height]="300"
+    [videoOptions]="videoOptions" [allowCameraSwitch]="allowCameraSwitch"
+     [trigger]="triggerObservable" (imageCapture)="handleImage($event)"></webcam>
+  </div>
+  <div class="relative bg-slate-100 py-2 px-5 border-y-2">
+    Ukuran font soal :
+    <span class="font-bold ml-1 cursor-pointer text-xs" (click)="ukuranText('text-xs')">A</span>
+    <span class="font-bold ml-1 cursor-pointer text-base" (click)="ukuranText('text-base')">A</span>
+    <span class="font-bold ml-1 cursor-pointer text-xl" (click)="ukuranText('text-3xl')">A</span>
+    <!-- <span class="absolute left-1/2 top-3" [ngClass]="persentaseLoading < 99 ? 'text-red-700':'text-green-700'" *ngIf="showPersen"><b> {{persentaseLoading}} %</b></span> -->
+    <span class="float-right">Waktu {{menit | number:'2.0'}}:{{detik | number:'2.0'}}</span>
+    <span class="rounded-lg absolute right-1 shadow-sm flex z-2 bg-yellow-400 px-2 py-2" style="bottom: -40px;">
+      <svg class="h-6 w-6 text-red-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      </svg>
+      {{curang}}
+    </span>
+  </div>
+
+  <div class="py-3 px-3">
+    <div *ngIf="dataSoal.length > ind" class="py-3 px-3 border-2 transition-all ease-in-out delay-150" [ngClass]="sizeText">
+      <p [innerHTML]="soal.soal | sanitizehtml"></p>
+      <ul >
+        <li class="flex items-start pt-5">
+          <div (click)="pilihOpsi(soal._id+'&A')" [ngClass]="soal.pilihan == 'A' ?  'bg-slate-800': ''" class="basis-5 border-zinc-300 w-5 h-5 border-2 rounded-full cursor-pointer" ></div>
+          <p class="px-2 text-justify  basis-full" [innerHTML]="soal.opsiA | sanitizehtml"></p>
+        </li>
+        <li class="flex items-start  pt-5">
+          <div (click)="pilihOpsi(soal._id+'&B')" [ngClass]="soal.pilihan == 'B' ?  'bg-slate-800': ''" class="basis-5 border-zinc-300 w-5 h-5 border-2 rounded-full cursor-pointer" ></div>
+          <p class="px-2 text-justify  basis-full" [innerHTML]="soal.opsiB | sanitizehtml"></p>
+        </li>
+        <li class="flex items-start  pt-5">
+          <div (click)="pilihOpsi(soal._id+'&C')" [ngClass]="soal.pilihan == 'C' ?  'bg-slate-800': ''" class="basis-5 border-zinc-300 w-5 h-5 border-2 rounded-full cursor-pointer" ></div>
+          <p class="px-2 text-justify  basis-full" [innerHTML]="soal.opsiC | sanitizehtml"></p>
+        </li>
+        <li class="flex items-start  pt-5">
+          <div (click)="pilihOpsi(soal._id+'&D')" [ngClass]="soal.pilihan == 'D' ?  'bg-slate-800': ''" class="basis-5 border-zinc-300  w-5 h-5 border-2 cursor-pointer rounded-full " ></div>
+          <p class="px-2 text-justify  basis-full" [innerHTML]="soal.opsiD | sanitizehtml"></p>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="dataSoal.length < ind+1 " class="text-center py-3 px-3 border-2 transition-all ease-in-out delay-150">
+      <i><h2>Pastikan dulu jawaban sudah di jawab semua dengan benar, lalu tekan kirim jawaban</h2></i>
+      <i *ngIf="showPersen"><h2>Jawaban belum bisa di kirim karena Soal belum terloading 100% silahkan di refresh</h2></i>
+      <button *ngIf="sebagai && !showPersen" class="bg-red-800 px-4 py-1 shadow-lg rounded text-white hover:bg-red-700 mt-10" (click)="kirimJawaban()">Kirim Jawaban</button>
+    </div>
+  </div>
+  <div class="flex justify-between py-3 px-8">
+    <span [ngClass]="ind == 0 ? 'bg-white':'bg-sky-500 hover:bg-sky-400 cursor-pointer'" class="   text-sm  px-2 py-2 rounded text-white" (click)="sebelumnya()">Sebelumnya </span>
+    <span *ngIf="dataSoal.length > ind" class="hover:bg-sky-400 cursor-pointer bg-sky-500 text-sm px-2 py-2 rounded text-white" (click)="selanjutnya()"> Selanjutnya </span>
+  </div>
+</div>

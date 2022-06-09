@@ -1,0 +1,142 @@
+<div class="px-3 py-1 bg-gray-100 ">
+  Data Siswa
+</div>
+
+<div class="px-3 py-3 text-sm bg-white shadow-sm grid">
+  <div class="text-right">
+    <label class="bg-sky-800 hover:bg-sky-700 px-2 py-1 text-white rounded shadow-sm cursor-pointer mr-1" (click)="downloadExcel()">Download Format</label>
+    <label for="exc" class="bg-red-800 hover:bg-red-700 px-2 py-1 text-white rounded shadow-sm mr-1 cursor-pointer">Import Excel</label>
+    <input id="exc" type="file" class="hidden" (change)="importExcel($event)">
+  </div>
+  <label for="">Nama Siswa</label>
+  <input type="text" [(ngModel)]="siswa.nama_siswa" placeholder="Nama siswa" class="px-2 py-1 border">
+  <label for="">NISN</label>
+  <input type="text" [(ngModel)]="siswa.nisn" placeholder="Nisn siswa" class="px-2 py-1 border">
+  <label for="">NIS</label>
+  <input type="text" [(ngModel)]="siswa.nis" placeholder="Nis siswa" class="px-2 py-1 border">
+  <label for="">Jenis Kelamin[  {{siswa.sex}}  ]</label>
+  <div class="flex">
+    <label for="laki" [ngClass]="siswa.sex == 'laki-laki' ? 'bg-blue-900 shadow-2xl':'text-gray-400'" class="px-3 py-1 shadow-sm border w-fit text-white transition-all ease-out duration-200 cursor-pointer">Laki-laki</label>
+    <input id="laki" type="radio" [(ngModel)]="siswa.sex" value="laki-laki" name="status" class="px-2 py-1 border hidden">
+    <label for="wanita"  [ngClass]="siswa.sex == 'perempuan' ? 'bg-red-900 shadow-inner':'text-gray-400'" class="px-3 py-1 shadow-sm border w-fit text-white transition-all ease-out duration-200 cursor-pointer"> Perempuan</label>
+    <input id="wanita" type="radio" [(ngModel)]="siswa.sex" value="perempuan" name="status" class="px-2 py-1 border hidden">
+  </div>
+  <label for="">Agama</label>
+  <select [(ngModel)]="siswa.agama" class="w-full px-2 py-1 border">
+    <option value="">-Pilih Agama-</option>
+    <option value="Islam">Islam</option>
+    <option value="Protestan">Protestan</option>
+    <option value="Katolik">Katolik</option>
+    <option value="Hindu">Hindu</option>
+    <option value="Budha">Budha</option>
+  </select>
+  <label for="">Status siswa [  {{siswa.status}}  ]</label>
+  <div class="flex">
+    <label for="aktif" [ngClass]="siswa.status == 'aktif' ? 'bg-blue-900 shadow-2xl':'text-gray-400'" class="px-3 py-1 shadow-sm border w-fit text-white transition-all ease-out duration-200 cursor-pointer">Aktif</label>
+    <input id="aktif" type="radio" [(ngModel)]="siswa.status" value="aktif" name="status" class="px-2 py-1 border hidden">
+    <label for="nonaktif"  [ngClass]="siswa.status == 'nonaktif' ? 'bg-red-900 shadow-inner':'text-gray-400'" class="px-3 py-1 shadow-sm border w-fit text-white transition-all ease-out duration-200 cursor-pointer">  Tidak Aktif</label>
+    <input id="nonaktif" type="radio" [(ngModel)]="siswa.status" value="nonaktif" name="status" class="px-2 py-1 border hidden">
+  </div>
+</div>
+<div class="px-3 py-3 bg-white shadow-sm">
+  <hr>
+  <div class="my-2 text-sm text-right">
+    <button class="bg-sky-500 hover:bg-sky-400 rounded shadow-lg px-4 py-1 text-white mr-1" (click)="siswa = {}">Batal</button>
+    <button (click)="simpan()" [ngClass]="siswa._id == undefined ? 'bg-green-800 hover:bg-green-700' : 'bg-red-800 hover:bg-red-700' " class="rounded shadow-lg px-4 py-1 text-white">
+      <span *ngIf="siswa._id == undefined">Simpan</span>
+      <span *ngIf="siswa._id != undefined">Update</span>
+    </button>
+  </div>
+</div>
+<div class="px-3 py-3 my-1 bg-white shadow-sm relative">
+  <input type="text" (focus)="cariSemua()" [(ngModel)]="cari" placeholder="Cari siswa" class="border py-1 px-2 border-gray-400">
+
+  <div class="flex justify-evenly px-2 right-3 bg-gray-100 py-1 border absolute z-10 top-1">
+    <div class="flex">
+
+      <span (click)="prev()" class="bg-gray-100 border px-3 cursor-pointer shadow-sm ml-2">
+        <svg class="h-5 w-5  text-gray-400 hover:text-black"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="11 7 6 12 11 17" />
+          <polyline points="17 7 12 12 17 17" />
+        </svg>
+      </span>
+      <span class="bg-white px-4 border"> {{hal}} </span>
+      <span (click)="next()" class="bg-gray-100 px-3 cursor-pointer border shadow-sm ">
+        <svg class="h-5 w-5 text-gray-400 hover:text-black"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <polyline points="13 17 18 12 13 7" />
+          <polyline points="6 17 11 12 6 7" />
+        </svg>
+      </span>
+      <span class="ml-1 mr-2"> dari {{sisa}}</span>
+    </div>
+    <select class="basis-1" [(ngModel)]="limit" (change)="loadSoalSendiri(); hal = 1; skip = 0">
+      <option value="">-data-</option>
+      <option value="5">5</option>
+      <option value="15">15</option>
+      <option value="30">30</option>
+    </select>
+  </div>
+  <div class="w-full overflow-auto">
+  <table class="w-full border table-auto text-sm">
+    <thead class="border bg-gray-700 text-white">
+      <tr>
+        <th class="border w-10">No</th>
+        <th class="border cursor-pointer" (click)="urutan(allData,'nama_siswa')">Nama</th>
+        <th class="border">Nisn</th>
+        <th  class="border">Nis</th>
+        <th  class="border cursor-pointer" (click)="urutan(allData,'kelas')">Kelas</th>
+        <th class="border cursor-pointer" (click)="urutan(allData,'status')">Status</th>
+        <th class="border">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border hover:bg-gray-100" *ngFor="let siswas of allData | cari : cari : 'nama_siswa'; let i = index" [ngClass]="siswas.status == 'nonaktif' ? 'bg-gray-300 text-gray-400':''">
+        <td class="border text-center">{{i+1}}</td>
+        <td class="border px-2 uppercase">{{siswas.nama_siswa}}</td>
+        <td class="border text-center">{{siswas.nisn}}</td>
+        <td class="border text-center">{{siswas.nis}}</td>
+        <td class="border text-center">{{siswas.kelas}}</td>
+        <td class="border text-center">{{siswas.status}}</td>
+        <td class="border text-center flex items-center justify-evenly">
+          <svg class="h-4 w-4 text-teal-800 cursor-pointer" (click)="siswa = siswas"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <span>|</span>
+          <span class="cursor-pointer text-rose-700" (click)="deleted(siswas._id)">&times;</span>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- format -->
+<table id="excel" class="hidden">
+  <tr>
+    <td>nama_siswa</td>
+    <td>nis</td>
+    <td>nisn</td>
+    <td>kelas</td>
+    <td>sex</td>
+    <td>agama</td>
+    <td>status</td>
+  </tr>
+</table>
+
+<!-- dialogbox -->
+<div *ngIf="showBox" (click)="showBox = false" class="fixed top-0 left-0 opacity-90 bg-zinc-900 z-30 h-screen w-screen "></div>
+<div *ngIf="showBox" class="absolute text-sm w-1/2 m-0 m-auto left-0 right-0 top-20   z-40">
+  <div class="px-2 py-1 text-white bg-sky-800">
+    Data import
+    <span class="float-right cursor-pointer" (click)="showBox = false; dataImport = []">&times;</span>
+  </div>
+  <div class="bg-white px-10 py-5">
+    <ul>
+      <li class="bg-gray-50 border-b" *ngFor="let siswa of dataImport">{{siswa.nama_siswa}} [{{siswa.kelas}}]<br>
+      </li>
+    </ul>
+    <div class="pt-5 text-right">
+       <button (click)="showBox = false; dataImport = []" class="bg-cyan-800 mr-1 text-sm px-4 py-1 rounded shadow-sm text-white hover:bg-cyan-700">Batal</button>
+      <button (click)="simpanAll()" class="bg-green-800 text-sm px-4 py-1 rounded shadow-sm text-white hover:bg-green-700">Simpan</button>
+    </div>
+  </div>
+</div>

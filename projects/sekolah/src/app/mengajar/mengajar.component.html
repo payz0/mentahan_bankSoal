@@ -1,0 +1,85 @@
+<div class="px-3 py-1 bg-gray-100 ">
+  Tugas Mengajar
+</div>
+<div class="flex w-full px-3 py-3 text-sm bg-white shadow-sm " >
+  <table class="border basis-full" (click)="showMapel = false; showKelas = false">
+    <thead class="bg-gray-300 border border-gray-400 ">
+      <tr >
+        <th class="border border-gray-400 px-3 py-3">No</th>
+        <th class="border border-gray-400">Guru</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border border-gray-400 cursor-pointer" *ngFor="let guru of dataGuru; let i = index" [ngClass]="id_guru == guru._id ? 'bg-sky-200':''">
+        <td class="border border-gray-400 w-2 text-center align-top">{{i+1}}</td>
+        <td class="border border-gray-400 px-2" (click)="pilihGuru(guru._id)">
+            <div class="border-b-2 font-bold text-blue-800 bg-grey-600">{{guru.nama_guru}}</div>
+            <div>
+              <ul class="list-disc ml-3">
+                <ng-container *ngFor="let map of arrayMapel">
+                <li *ngIf="map.id_guru == guru._id" class="text-xs"><i> {{map.mapel}} </i> kelas : {{map.kelas}}</li>
+                </ng-container>
+              </ul>
+            </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="border basis-1/4 border-gray-400" (click)="showKelas = false">
+    <thead class="bg-gray-300 border border-gray-400 ">
+      <tr >
+        <th class="border border-gray-400 px-3 py-3" >Mapel</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="border bg-gray-400 hover:text-blue-800  text-white h-9 text-center relative cursor-pointer" (click)="showMapel = !showMapel">Tambah Mapel
+            <ul [ngClass]="showMapel ? 'block':'hidden'" class="bg-gray-300 shadow-lg text-xs absolute top-8 w-full">
+              <li (click)="tambahMapel(mapel._id,mapel.mapel,mapel.tingkat)" class="hover:bg-gray-200 cursor-pointer transition-all ease-out text-black duration-200" *ngFor="let mapel of dataMapel">{{mapel.mapel}} [ {{mapel.tingkat}} ]</li>
+            </ul>
+        </td>
+      </tr>
+
+      <ng-container *ngFor="let ngajar of arrayMapel;let i = index" >
+      <tr class="h-5" [ngClass]="id_mapel == ngajar.id_mapel ? 'bg-sky-200':''"  *ngIf="ngajar.id_guru == id_guru">
+        <td (click)="pilihMapel(i,ngajar.id_mapel)" class="text-center border border-gray-200 cursor-pointer hover:bg-gray-100">{{ngajar.mapel}} </td>
+      </tr>
+    </ng-container>
+    <tr>
+      <td></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="border border-gray-400 basis-1/4" (click)="showMapel = false;">
+    <thead class="bg-gray-300 border border-gray-400 ">
+      <tr >
+        <th class="border border-gray-400 px-3 py-3">Ruangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td  class="border bg-gray-400 hover:text-blue-800 text-white h-9  text-center relative cursor-pointer" (click)="showKelas = !showKelas">Tambah Ruangan
+          <div [ngClass]="showKelas ? 'block':'hidden'" class="bg-gray-300 shadow-lg absolute top-8 w-full">
+            <ul >
+              <li (click)="tambahRuangan(kelas.kelas)"  class="hover:bg-gray-200 py-2 cursor-pointer transition-all ease-out text-black duration-200" *ngFor="let kelas of dataKelasPer">{{kelas.kelas}}</li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+
+      <tr class="h-5 align-middle">
+        <td colspan="2" class="text-center ">
+            {{arrKelas.join(',')}}
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="w-full px-3 py-3 text-sm bg-white text-right shadow-sm">
+  <button class="bg-green-800 hover:bg-green-700 px-4 py-1 rounded text-white shadow-lg" (click)="simpan()">Simpan</button>
+</div>

@@ -1,0 +1,62 @@
+<ng-container *ngIf="!ujianMulai">
+<header class="fixed z-50 w-full flex justify-between px-4 py-4 shadow-lg border-b-2 border-gray-600 bg-gradient-to-r from-cyan-500 to-blue-500">
+  <h1 class="text-white text-xl font-semibold">SMP Negeri 1 Arut Selatan</h1>
+  <ul class="flex text-white space-x-6">
+    <li>
+      <a class="hover:text-blue-300" routerLink="">Home</a>
+      <!-- Home -->
+    </li>
+
+  </ul>
+</header>
+<div class="bg-gray-200 h-screen w-screen">
+  <div class="bg-no-repeat bg-center bg-cover pt-5 h-72 bg-gradient-to-r from-green-400 to-blue-500 relative" style="background-image: url(./assets/image/backUjian.jpg)">
+    <div class="flex md:px-20 items-center pt-16  md:w-1/2 m-0 m-auto">
+      <img class="w-24" src="./assets/image/logo.png" alt="">
+      <div class="grid text-center">
+        <b class="text-white md:text-4xl text-2xl">SMP Negeri 1 Arut Selatan</b>
+        <span class="text-white text-xl">Aplikasi Ujian </span> <span class="text-yellow-400">( {{versi}} )</span>
+      </div>
+    </div>
+    <div *ngIf="!aksesLogin">
+      <div class="px-12 mt-20 pb-20 py-12 md:w-1/3 w-full left-0 right-0 top-36 rounded shadow-lg absolute m-0 m-auto bg-white">
+        <b class="text-gray-500">Selamat Datang</b>
+        <p class="mb-6">Silahkan login dengan NISN dan NIS yang anda miliki</p>
+        <input  type="text" [(ngModel)]="dataLogin.nisn" placeholder="Masukkan NISN" class="border-b-2 px-2 py-2 mt-2 border-gray-300 w-full">
+        <input type="text" [(ngModel)]="dataLogin.nis"   placeholder="Masukkan NIS" class="border-b-2 px-2 py-2 mt-2 border-gray-300 w-full">
+        <button (click)="login()" class="w-full bg-blue-700 shadow-lg hover:bg-blue-600 px-2 py-2 rounded-lg text-white font-bold mt-4">Login</button>
+      </div>
+    </div>
+    <div *ngIf="aksesLogin">
+      <div class="px-12 mt-20 pb-20 py-12 md:w-1/3 w-full left-0 right-0 top-36 rounded shadow-lg absolute m-0 m-auto bg-white">
+        <b class="text-gray-500">Konfirmasi data peserta ujian</b>
+        <div class="text-sm leading-5 mt-5">
+          <label class="font-bold" for="">NISN</label>
+          <input [value]="peserta.nisn" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Nama Peserta</label>
+          <input [value]="peserta.nama_siswa | uppercase" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Kelas</label>
+          <input [value]="peserta.kelas" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Jenis Kelamin</label>
+          <input [value]="peserta.sex" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Mapel Ujian</label>
+          <input [value]="peserta.mapel" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Durasi</label>
+          <input [value]="peserta.durasi" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Jenis Ujian</label>
+          <input [value]="peserta.jenis" type="text" disabled class="w-full mb-4 border-b">
+          <label class="font-bold" for="">Token</label>
+          <input [(ngModel)]="token" type="text"  class="w-full px-2 py-2 mb-4 border-b">
+        </div>
+        <button (click)="mulai()" class="w-full bg-green-900 shadow-lg hover:bg-green-800 px-2 py-2 rounded-lg text-white font-bold mt-4">Mulai</button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-container>
+<ng-container *ngIf="ujianMulai">
+  <div class="fixed w-screen h-screen bg-gray-300 top-0 left-0" style="z-index: -9999;"></div>
+  <div class="px-2 py-2">
+    <app-ujian></app-ujian>
+  </div>
+</ng-container>

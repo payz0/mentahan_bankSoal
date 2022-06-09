@@ -1,0 +1,15 @@
+.tokenLoad{
+  /* padding: 0; */
+  left: 100%;
+  position: absolute;
+  transition: all 200ms;
+  animation: token 3000ms ease-in-out infinite ;
+}
+
+@keyframes token {
+  0%{  opacity: 1; }
+  25%{opacity: 0;}
+  50% {opacity: 1; }
+  75%{opacity: 0;}
+  100%{opacity: 1; }
+}

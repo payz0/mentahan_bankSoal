@@ -1,0 +1,12 @@
+
+<router-outlet >
+
+  <div *ngIf="datas.loading" class="bg-gray-900 opacity-50 fixed top-0 left-0 w-screen z-30 h-screen"></div>
+  <div *ngIf="datas.loading" class="fixed top-0 left-0 w-screen z-40 h-screen">
+    <div  class="top-1/2 left-1/2 lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+  </div>
+</router-outlet>
+<!-- untuk info -->
+<div [ngClass]="datas.message ? 'block slide':'hidden'" class="fixed top-2 z-50 bg-orange-400 px-5 py-1  right-1 shadow-md text-white">
+  {{datas.textPesan}}
+</div>
